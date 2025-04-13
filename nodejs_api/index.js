@@ -1,5 +1,5 @@
 const express = require('express');
-const { ethers } = require('ethers');
+const { ethers, formatEther } = require('ethers');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
 const web3 = require('web3');
@@ -240,13 +240,20 @@ app.post('/api/transfer', verifyToken, async (req, res) => {
 // Endpoint for fetching token balances
 app.get('/api/balance/:address', verifyToken, async (req, res) => {
   try {
+    console.log('Fetching balance for address:', req.params.address);
+
     const nprBalance = await nprToken.balanceOf(req.params.address);
+    console.log('Raw NPR Balance:', nprBalance);
+
     const usdBalance = await usdToken.balanceOf(req.params.address);
+    console.log('Raw USD Balance:', usdBalance);
+
     res.json({
-      npr: ethers.formatEther(nprBalance),
-      usd: ethers.formatEther(usdBalance),
+      npr: formatEther(nprBalance), // Correct usage of formatEther
+      usd: formatEther(usdBalance), // Correct usage of formatEther
     });
   } catch (error) {
+    console.error('Error in /api/balance:', error);
     res.status(500).json({ error: error.message });
   }
 });
