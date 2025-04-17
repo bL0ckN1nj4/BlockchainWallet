@@ -1,83 +1,143 @@
-# NPRWallet - Blockchain-based Digital Wallet
+# NPRWallet - Blockchain-Based Digital Wallet
 
-NPRWallet is a blockchain-based digital wallet that allows users to manage NPR (Nepalese Rupee) and NPRT (NPR Token) with features for converting between the two and transferring tokens to other users.
+NPRWallet is a full-stack blockchain-based digital wallet that enables users to manage Nepalese Rupees (NPR) and NPR Tokens (NPRT). It features secure email-based authentication, fiat/token balance management, seamless conversion, and blockchain-powered token transfers. The app is designed for demonstration and educational purposes, showcasing the integration of web, backend, and smart contract technologies.
 
-## Features
+---
 
-- Email-based user registration and login
-- View NPR (fiat) and NPRT (token) balances
-- Convert NPR to NPRT and vice versa at a rate of 1 NPRT = 100 NPR
-- Transfer NPRT to other wallet addresses
-- View transaction history
-- User profile management
-- Bank account connection (simulated)
+## 🚀 Features
 
-## Technology Stack
+- **Email-based Authentication**: Secure registration and login using email, with mappings stored on IPFS via Pinata.
+- **NPR & NPRT Balances**: View your fiat (NPR) and token (NPRT, ERC20) balances in a unified dashboard.
+- **Conversion**: Instantly convert between NPR and NPRT at a fixed exchange rate (1 NPRT = 100 NPR).
+- **Token Transfer**: Send NPRT tokens to other wallet addresses on the blockchain.
+- **Transaction History**: Review your past transactions and conversions.
+- **User Profile Management**: Update your profile and manage wallet settings.
+- **Bank Account Connection (Simulated)**: Link a simulated bank account for fiat operations.
+- **Modern Web UI**: Responsive frontend built with HTML, CSS, JavaScript, and Bootstrap.
 
-- **Backend**: Node.js with Express
-- **Blockchain**: Ethereum (local Hardhat node)
-- **Smart Contracts**: Solidity (ERC20 tokens)
-- **Frontend**: HTML5, CSS3, JavaScript
-- **Authentication**: JWT (JSON Web Tokens)
-- **Storage**: Pinata (IPFS) for email-to-wallet address mappings
+---
 
-## Setup Instructions
+## 🛠️ Technology Stack
 
-### Prerequisites
+- **Frontend**: HTML5, CSS3, JavaScript, Bootstrap
+- **Backend API**: Node.js, Express, JWT, Axios
+- **Blockchain**: Ethereum (local Hardhat node), Ethers.js, Web3.js
+- **Smart Contracts**: Solidity (ERC20 standard for NPRToken and USDToken)
+- **Storage/Integration**: Pinata (IPFS) for decentralized email-to-wallet mapping
 
-- Node.js and npm installed
-- Hardhat for local blockchain development
+---
 
-### Running the Application
+## 📁 Project Structure
 
-1. **Start the local blockchain**:
-
-```shell
-npx hardhat node
+```
+NPRWallet/
+├── contracts/         # Solidity smart contracts (NPRToken, USDToken, ERC20, etc.)
+├── frontend/          # Web UI (HTML, JS, CSS, images)
+├── nodejs_api/        # Backend API (Express server, blockchain logic)
+├── scripts/           # Deployment scripts (e.g., deploy.js)
+├── artifacts/, cache/ # Hardhat build artifacts
+├── test/              # Smart contract tests
+├── .env               # Environment variables (Pinata keys, etc.)
+├── package.json       # Project dependencies (root)
+├── hardhat.config.js  # Hardhat configuration
+├── start-services.bat # Windows batch script to start services
+└── README.md          # Project documentation
 ```
 
-2. **Deploy the smart contracts** (in a new terminal):
+---
 
+## 🖥️ Getting Started (Fresh Machine)
+
+### 1. Prerequisites
+- **Node.js** (v16+ recommended): https://nodejs.org/
+- **npm** (comes with Node.js)
+- **Pinata account** (for IPFS integration): https://pinata.cloud/
+
+### 2. Clone the Repository
 ```shell
-npx hardhat run scripts/deploy.js --network localhost
+git clone <your-repo-url>
+cd "NPRWallet"
 ```
 
-3. **Set up environment variables**:
+### 3. Install Dependencies (Root & Backend)
+```shell
+npm install           # Install root dependencies (Hardhat, etc.)
+cd nodejs_api
+npm install           # Install backend API dependencies
+cd ..
+```
 
-Create a `.env` file with your Pinata API keys:
-
+### 4. Configure Environment Variables
+Create a `.env` file in the root directory with your Pinata API keys:
 ```
 PINATA_API_KEY=your_pinata_api_key
 PINATA_API_SECRET=your_pinata_api_secret
 ```
 
-4. **Start the Node.js backend**:
+### 5. Start Local Blockchain (Hardhat)
+```shell
+npx hardhat node
+```
 
+### 6. Deploy Smart Contracts
+Open a new terminal:
+```shell
+npx hardhat run scripts/deploy.js --network localhost
+```
+
+### 7. Start Backend API Server
 ```shell
 cd nodejs_api
-npm install
 node index.js
 ```
 
-5. **Serve the frontend**:
-
-You can use any static file server to serve the frontend files. For example:
-
+### 8. Serve the Frontend
+You can use any static file server (e.g., http-server):
 ```shell
-npx http-server frontend -p 3000
+npx http-server frontend -p 3000 --cors
+```
+Or use the provided batch script (Windows only):
+```shell
+start-services.bat
 ```
 
-6. **Access the application**:
+### 9. Access the Application
+Open your browser and go to:
+```
+http://localhost:3000
+```
 
-Open your browser and navigate to: `http://localhost:3000`
+---
 
-## Smart Contract Details
+## ⚙️ Smart Contracts
+- `NPRToken.sol`: ERC20 token contract for NPRT
+- `USDToken.sol`: ERC20 token contract for USD (if used)
+- Other supporting contracts: `ERC20.sol`, `Ownable.sol`, `SafeMath.sol`, etc.
+- **Deployment**: Both NPRToken and USDToken are deployed locally via Hardhat scripts
+- **Exchange Rate**: Fixed at 1 NPRT = 100 NPR
 
-- **NPRToken**: ERC20 token representing NPRT (NPR Token)
-- **Exchange Rate**: 1 NPRT = 100 NPR
+---
 
-## Security Notes
+## 🔒 Security & Notes
+- **Demo Only**: Not for production use. Keys, tokens, and logic are for educational purposes.
+- **Environment Variables**: Never commit your `.env` file or private keys to version control.
+- **Private Keys**: Should never be stored in localStorage or exposed in frontend code.
+- **Further Hardening**: Production deployment requires additional security, HTTPS, and audit of smart contracts.
 
-- This application is for demonstration purposes only
-- In a production environment, additional security measures would be implemented
-- Private keys should never be stored in localStorage in a real application
+---
+
+## 📞 Support & Contribution
+For issues or contributions, please open an issue or pull request on the repository.
+
+---
+
+## 📚 References
+- [Hardhat Documentation](https://hardhat.org/)
+- [Pinata IPFS](https://pinata.cloud/)
+- [Solidity Docs](https://docs.soliditylang.org/)
+- [Express.js](https://expressjs.com/)
+- [Bootstrap](https://getbootstrap.com/)
+
+---
+
+Enjoy exploring blockchain wallet technology with NPRWallet!
