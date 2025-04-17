@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NPRT Wallet Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <header class="dashboard-header">
+            <div class="logo">
+                <i class="fas fa-wallet"></i>
+                <h1>NPRT Wallet</h1>
+            </div>
+            <div class="user-info">
+                <span id="user-email"></span>
+                <button id="logout-btn" class="btn btn-outline">Logout</button>
+            </div>
+        </header>
+
+        <div class="dashboard-main">
+            <aside class="sidebar">
+                <nav>
+                    <ul>
+                        <li class="active"><a href="#wallet"><i class="fas fa-home"></i> Dashboard</a></li>
+                        <li><a href="#send"><i class="fas fa-paper-plane"></i> Send</a></li>
+                        <li><a href="#convert"><i class="fas fa-exchange-alt"></i> Convert</a></li>
+                        <li><a href="#bank"><i class="fas fa-university"></i> Bank</a></li>
+                        <li><a href="#transactions"><i class="fas fa-history"></i> Transactions</a></li>
+                    </ul>
+                </nav>
+                <div class="wallet-address">
+                    <h3>Wallet Address</h3>
+                    <div class="address-container">
+                        <code id="wallet-address">0x...</code>
+                        <button id="copy-address" class="btn-icon">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                    </div>
+                </div>
+            </aside>
+
+            <main class="content">
+                <!-- Wallet Section -->
+                <section id="wallet" class="dashboard-section active">
+                    <h2>Wallet Overview</h2>
+                    <div class="balance-cards">
+                        <div class="balance-card">
+                            <div class="balance-info">
+                                <h3>NPRT Token</h3>
+                                <h2 id="nprt-balance">0.00</h2>
+                                <p>Current value: <span id="nprt-value">0.00 NPR</span></p>
+                            </div>
+                            <div class="balance-icon">
+                                <i class="fas fa-coins"></i>
+                            </div>
+                        </div>
+
+                        <div class="balance-card">
+                            <div class="balance-info">
+                                <h3>NPR Balance</h3>
+                                <h2 id="npr-balance">0.00</h2>
+                                <p>Fiat Currency</p>
+                            </div>
+                            <div class="balance-icon">
+                                <i class="fas fa-money-bill-wave"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="quick-actions">
+                        <button class="btn btn-primary" data-action="send">
+                            <i class="fas fa-paper-plane"></i>
+                            Send
+                        </button>
+                        <button class="btn btn-secondary" data-action="convert">
+                            <i class="fas fa-exchange-alt"></i>
+                            Convert
+                        </button>
+                        <button class="btn btn-outline" data-action="bank">
+                            <i class="fas fa-university"></i>
+                            Bank
+                        </button>
+                        <button class="btn btn-outline" data-action="transactions">
+                            <i class="fas fa-history"></i>
+                            Transactions
+                        </button>
+                    </div>
+                </section>
+
+                <!-- Send Section -->
+                <section id="send" class="dashboard-section">
+                    <h2>Send Tokens</h2>
+                    <div class="card">
+                        <form id="send-form">
+                            <div class="form-group">
+                                <label for="send-token-type">Select Token</label>
+                                <select id="send-token-type" class="form-control" required>
+                                    <option value="NPRT">NPRT</option>
+                                    <option value="NPR">NPR</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="recipient-address">Recipient Address</label>
+                                <input type="text" id="recipient-address" class="form-control" placeholder="0x..." required>
+                            </div>
+                            <div class="form-group">
+                                <label for="send-amount">Amount</label>
+                                <div class="input-with-label">
+                                    <input type="number" id="send-amount" class="form-control" step="0.000001" min="0" required>
+                                    <span id="send-token-label">NPRT</span>
+                                </div>
+                                <div class="balance-display">
+                                    Available: <span id="available-balance">0</span> <span id="available-token">NPRT</span>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">Send Now</button>
+                        </form>
+                    </div>
+                </section>
+
+                <!-- Convert Section -->
+                <section id="convert" class="dashboard-section">
+                    <h2>Convert Currency</h2>
+                    <div class="card">
+                        <form id="convert-form">
+                            <div class="form-group">
+                                <label for="conversion-type">Conversion Type</label>
+                                <select id="conversion-type" class="form-control" required>
+                                    <option value="npr-to-nprt">NPR to NPRT</option>
+                                    <option value="nprt-to-npr">NPRT to NPR</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="convert-amount">Amount</label>
+                                <div class="input-with-label">
+                                    <input type="number" id="convert-amount" class="form-control" step="0.01" min="0" required>
+                                    <span id="convert-from-label">NPR</span>
+                                </div>
+                                <div class="balance-display">
+                                    Available: <span id="convert-available-balance">0</span> <span id="convert-available-token">NPR</span>
+                                </div>
+                            </div>
+                            <div class="conversion-result">
+                                <div class="conversion-arrow">
+                                    <i class="fas fa-arrow-down"></i>
+                                </div>
+                                <div class="result-container">
+                                    <span id="conversion-result">0</span> <span id="convert-to-label">NPRT</span>
+                                </div>
+                                <div class="conversion-rate">
+                                    Rate: 1 NPRT = 100 NPR
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">Convert Now</button>
+                        </form>
+                    </div>
+                </section>
+
+                <!-- Bank Section -->
+                <section id="bank" class="dashboard-section">
+                    <h2>Bank Connection</h2>
+                    
+                    <!-- Bank Connect Form (visible when not connected) -->
+                    <div id="bank-connect-form" class="card">
+                        <div class="bank-connect-header">
+                            <div class="bank-icon">
+                                <i class="fas fa-university"></i>
+                            </div>
+                            <h3>Connect Your Bank Account</h3>
+                            <p>Link your bank account to easily deposit and withdraw NPR from your wallet.</p>
+                        </div>
+                        <form id="connect-bank-form">
+                            <div class="form-group">
+                                <label for="bank-full-name">Full Name</label>
+                                <input type="text" id="bank-full-name" class="form-control" placeholder="Enter your full name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="bank-phone">Phone Number</label>
+                                <input type="tel" id="bank-phone" class="form-control" placeholder="10 digit phone number" pattern="[0-9]{10}" required>
+                                <div class="input-hint">Format: 10 digits without spaces or dashes</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="bank-account">Bank Account Number</label>
+                                <input type="text" id="bank-account" class="form-control" placeholder="16 digit account number" pattern="[0-9]{16}" required>
+                                <div class="input-hint">Format: 16 digits without spaces or dashes</div>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" id="bank-terms" class="form-check-input" required>
+                                <label for="bank-terms" class="form-check-label">I agree to the terms and conditions for bank connection</label>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">Connect Bank Account</button>
+                        </form>
+                    </div>
+                    
+                    <!-- Bank Transfer Interface (visible after connected) -->
+                    <div id="bank-transfer-interface" class="card hidden">
+                        <div class="bank-status-header">
+                            <div class="bank-icon connected">
+                                <i class="fas fa-university"></i>
+                                <div class="status-indicator"></div>
+                            </div>
+                            <div class="bank-status-info">
+                                <h3>Bank Account Connected</h3>
+                                <p>Account: <span id="connected-bank-account">****</span></p>
+                                <button id="disconnect-bank" class="btn btn-text">
+                                    <i class="fas fa-unlink"></i> Disconnect
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="bank-transfer-options">
+                            <div class="transfer-option-tabs">
+                                <button id="deposit-tab" class="tab-btn active">Deposit to Wallet</button>
+                                <button id="withdraw-tab" class="tab-btn">Withdraw to Bank</button>
+                            </div>
+                            
+                            <!-- Deposit Form -->
+                            <div id="deposit-form-container" class="transfer-form active">
+                                <form id="deposit-form">
+                                    <div class="form-group">
+                                        <label for="deposit-amount">Deposit Amount (NPR)</label>
+                                        <div class="input-with-label">
+                                            <input type="number" id="deposit-amount" class="form-control" step="0.01" min="100" required>
+                                            <span>NPR</span>
+                                        </div>
+                                        <div class="input-hint">Minimum deposit: 100 NPR</div>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary btn-block">Deposit to Wallet</button>
+                                </form>
+                            </div>
+                            
+                            <!-- Withdraw Form -->
+                            <div id="withdraw-form-container" class="transfer-form">
+                                <form id="withdraw-form">
+                                    <div class="form-group">
+                                        <label for="withdraw-amount">Withdraw Amount (NPR)</label>
+                                        <div class="input-with-label">
+                                            <input type="number" id="withdraw-amount" class="form-control" step="0.01" min="100" required>
+                                            <span>NPR</span>
+                                        </div>
+                                        <div class="balance-display">
+                                            Available: <span id="withdraw-available-balance">0</span> NPR
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary btn-block">Withdraw to Bank</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Transactions Section -->
+                <section id="transactions" class="dashboard-section">
+                    <h2>Transaction History</h2>
+                    <div class="transaction-filters">
+                        <select id="tx-filter" class="form-control">
+                            <option value="all">All Transactions</option>
+                            <option value="transfer">Transfers</option>
+                            <option value="conversion">Conversions</option>
+                            <option value="bank">Bank Transactions</option>
+                        </select>
+                    </div>
+                    <div class="transaction-list">
+                        <table id="transaction-table">
+                            <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Details</th>
+                                    <th>Amount</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="transaction-body">
+                                <!-- Transactions will be added here dynamically -->
+                            </tbody>
+                        </table>
+                        <div id="no-transactions" class="empty-state">
+                            <i class="fas fa-search"></i>
+                            <p>No transactions found</p>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <!-- Transaction Success Modal -->
+    <div id="success-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div class="success-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h2>Transaction Successful!</h2>
+            <div class="tx-details">
+                <p>Transaction Hash: <code id="tx-hash">0x...</code></p>
+                <div class="copy-hash">
+                    <button id="copy-hash" class="btn-icon">
+                        <i class="fas fa-copy"></i>
+                    </button>
+                </div>
+            </div>
+            <button id="close-modal" class="btn btn-primary">Close</button>
+        </div>
+    </div>
+
+    <script src="dashboard.js"></script>
+</body>
+</html>

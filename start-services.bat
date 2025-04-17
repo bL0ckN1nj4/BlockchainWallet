@@ -1,0 +1,13 @@
+@echo off
+echo Starting blockchain wallet services...
+
+echo Starting Node.js API server...
+cd /d %~dp0\nodejs_api
+start cmd /k "node index.js"
+
+echo Starting frontend application...
+cd /d %~dp0
+start cmd /k "http-server frontend -p 3000 --cors"
+
+echo Services starting. Please wait...
+echo Access the application at: http://localhost:3000
