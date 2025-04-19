@@ -5,8 +5,8 @@ async function main() {
     const NPRToken = await ethers.getContractFactory("NPRToken");
     const USDToken = await ethers.getContractFactory("USDToken");
     
-    const nprToken = await NPRToken.attach("0x5fbdb2315678afecb367f032d93f642f64180aa3");
-    const usdToken = await USDToken.attach("0xe7f1725e7734ce288f8367e1bb143e90bb3f0512");
+    const nprToken = await NPRToken.attach("");
+    const usdToken = await USDToken.attach("");
 
     // Get the signer
     const [owner] = await ethers.getSigners();
