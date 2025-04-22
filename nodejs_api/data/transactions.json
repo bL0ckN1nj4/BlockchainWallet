@@ -1,6 +1,42 @@
 {
   "0x3b095be15f8b82aab8178eacdcd88fc08994a8cd": [
     {
+      "type": "Conversion",
+      "from": "NPRT",
+      "to": "NPR",
+      "nprtAmount": 20,
+      "nprAmount": 2000,
+      "txHash": "0x4771bca7e09f341db2ab7c91565864b1c422e326fac90740237066e779f0b780",
+      "status": "Completed",
+      "nprtBalance": 206.0908,
+      "nprBalance": 92500,
+      "timestamp": "2025-04-19T16:44:50.534Z"
+    },
+    {
+      "type": "Transfer",
+      "subtype": "Sent",
+      "to": "0x9a272d9eef5bee585377e38c696c3d868b67a13e",
+      "amount": 20,
+      "token": "NPRT",
+      "txHash": "0x361607f9b1c0f18a659ce047e69db2f3a6452d761290ab5a976ff980e014e5cd",
+      "status": "Completed",
+      "nprtBalance": 226.0908,
+      "nprBalance": 90500,
+      "timestamp": "2025-04-18T07:04:57.225Z"
+    },
+    {
+      "type": "Conversion",
+      "from": "NPR",
+      "to": "NPRT",
+      "nprAmount": 5000,
+      "nprtAmount": 50,
+      "txHash": "0x5472659f153c54a2d73ae4fdccfcd3554b635d98ae217c366db21c8142880947",
+      "status": "Completed",
+      "nprtBalance": 246.0908,
+      "nprBalance": 90500,
+      "timestamp": "2025-04-18T07:03:20.759Z"
+    },
+    {
       "type": "Transfer",
       "subtype": "Sent",
       "to": "0x9a272d9eef5bee585377e38c696c3d868b67a13e",
@@ -210,6 +246,18 @@
       "type": "Transfer",
       "subtype": "Received",
       "from": "0x3b095be15f8b82aab8178eacdcd88fc08994a8cd",
+      "amount": 20,
+      "token": "NPRT",
+      "txHash": "0x361607f9b1c0f18a659ce047e69db2f3a6452d761290ab5a976ff980e014e5cd",
+      "status": "Completed",
+      "nprtBalance": 131.5692,
+      "nprBalance": 100434,
+      "timestamp": "2025-04-18T07:04:57.225Z"
+    },
+    {
+      "type": "Transfer",
+      "subtype": "Received",
+      "from": "0x3b095be15f8b82aab8178eacdcd88fc08994a8cd",
       "amount": 5,
       "token": "NPRT",
       "txHash": "0xa71c2ad9d50564fbc977ab04ca496d64440bf615b251575b390f95c7efd952ca",
@@ -303,6 +351,34 @@
       "nprtBalance": 200,
       "nprBalance": 90000,
       "timestamp": "2025-04-17T04:58:03.745Z"
+    }
+  ],
+  "0x87b0e3ed2ad23132ac298b72ac1f5e26cfbfc6ea": [
+    {
+      "type": "Transfer",
+      "subtype": "Sent",
+      "to": "0x3b095be15f8b82aab8178eacdcd88fc08994a82r",
+      "amount": 111,
+      "token": "NPR",
+      "txHash": "0x485650781b73c3a14d4be8e6b02b8cdd05dd4e4eabfb5b15eb2b98fc55e4f1da",
+      "status": "Completed",
+      "nprtBalance": 100,
+      "nprBalance": 99889,
+      "timestamp": "2025-04-19T17:53:29.824Z"
+    }
+  ],
+  "0x3b095be15f8b82aab8178eacdcd88fc08994a82r": [
+    {
+      "type": "Transfer",
+      "subtype": "Received",
+      "from": "0x87b0e3ed2ad23132ac298b72ac1f5e26cfbfc6ea",
+      "amount": 111,
+      "token": "NPR",
+      "txHash": "0x485650781b73c3a14d4be8e6b02b8cdd05dd4e4eabfb5b15eb2b98fc55e4f1da",
+      "status": "Completed",
+      "nprtBalance": 0,
+      "nprBalance": 111,
+      "timestamp": "2025-04-19T17:53:29.824Z"
     }
   ]
 }

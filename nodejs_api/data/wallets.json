@@ -1,17 +1,27 @@
 {
   "0x3b095be15f8b82aab8178eacdcd88fc08994a8cd": {
-    "npr": 95500,
-    "nprt": 196.0908,
+    "npr": 92500,
+    "nprt": 206.0908,
     "address": "0x3b095be15f8b82aab8178eacdcd88fc08994a8cd"
   },
   "0x9a272d9eef5bee585377e38c696c3d868b67a13e": {
     "npr": 100434,
-    "nprt": 111.5692,
+    "nprt": 131.5692,
     "address": "0x9a272d9eef5bee585377e38c696c3d868b67a13e"
   },
   "0x8cf90d7c7fea1386e2a118acadf53916430b0e09": {
     "npr": 90000,
     "nprt": 133,
     "address": "0x8cf90d7c7fea1386e2a118acadf53916430b0e09"
+  },
+  "0x87b0e3ed2ad23132ac298b72ac1f5e26cfbfc6ea": {
+    "npr": 99889,
+    "nprt": 100,
+    "address": "0x87b0e3ed2ad23132ac298b72ac1f5e26cfbfc6ea"
+  },
+  "0x3b095be15f8b82aab8178eacdcd88fc08994a82r": {
+    "npr": 111,
+    "nprt": 0,
+    "address": "0x3b095be15f8b82aab8178eacdcd88fc08994a82r"
   }
 }
