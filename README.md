@@ -49,7 +49,7 @@ NPRWallet/
 ## 🖥️ Getting Started (Fresh Machine)
 
 ### 1. Prerequisites
-- **Node.js** (v16+ recommended): https://nodejs.org/
+- **Node.js** (v18+ recommended): https://nodejs.org/
 - **npm** (comes with Node.js)
 - **Pinata account** (for IPFS integration): https://pinata.cloud/
 
@@ -140,4 +140,4 @@ For issues or contributions, please open an issue or pull request on the reposit
 
 ---
 
-Enjoy exploring blockchain wallet technology with NPRWallet!
+Enjoy exploring blockchain wallet technology with NPRWallet!  :)
