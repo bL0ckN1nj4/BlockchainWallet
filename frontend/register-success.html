@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Successful - NPRT Wallet</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-form-container">
+            <div class="form-header">
+                <div class="logo">
+                    <i class="fas fa-wallet"></i>
+                    <h1>NPRT Wallet</h1>
+                </div>
+                <p>The Blockchain-based Digital Wallet</p>
+            </div>
+            <div class="auth-form">
+    <div class="form-group" style="text-align:center;">
+        <i class="fas fa-check-circle fa-3x" style="color: #28a745; margin-bottom: 1rem;"></i>
+        <h2 style="margin-bottom: 0.5rem;">Registration Successful!</h2>
+        <p id="registered-email" style="font-weight: 500;"></p>
+        <p style="margin-bottom: 2rem;">Your account has been created successfully.<br>You can now log in using your credentials.</p>
+        <button id="login-btn" class="btn btn-primary btn-block">Go to Login</button>
+    </div>
+</div>
+        </div>
+    </div>
+    <script>
+        // Show registered email if passed via sessionStorage
+        document.addEventListener('DOMContentLoaded', function() {
+            var email = sessionStorage.getItem('registeredEmail');
+            if (email) {
+                document.getElementById('registered-email').textContent = `Registered Email: ${email}`;
+                sessionStorage.removeItem('registeredEmail');
+            }
+            document.getElementById('login-btn').onclick = function() {
+                window.location.href = 'login.html';
+            };
+        });
+    </script>
+</body>
+</html>

@@ -241,7 +241,10 @@ document.addEventListener('DOMContentLoaded', function() {
             // Create details text based on transaction type
             let detailsText = '';
             let amountText = '';
+            let iconClass = tx.type.toLowerCase();
+            let iconName = '';
             
+            // Determine the appropriate icon and classes based on transaction type and subtype
             if (tx.type === 'Transfer') {
                 const address = tx.subtype === 'Sent' ? tx.to : tx.from;
                 const formattedAddress = `${address.substring(0, 6)}...${address.substring(address.length - 4)}`;
@@ -251,6 +254,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     `From: ${formattedAddress}`;
                 
                 amountText = `${tx.subtype === 'Sent' ? '-' : '+'} ${tx.amount} ${tx.token}`;
+                
+                // Add received class for received transfers
+                if (tx.subtype === 'Received') {
+                    iconClass += ' received';
+                    iconName = 'download';
+                } else {
+                    iconName = 'paper-plane';
+                }
             } else if (tx.type === 'Conversion') {
                 detailsText = `${tx.from} → ${tx.to}`;
                 
@@ -259,21 +270,33 @@ document.addEventListener('DOMContentLoaded', function() {
                 } else {
                     amountText = `${tx.nprtAmount} NPRT → ${tx.nprAmount} NPR`;
                 }
+                
+                iconName = 'exchange-alt';
             } else if (tx.type === 'Bank') {
                 detailsText = tx.subtype;
                 
                 if (tx.subtype === 'Deposit') {
                     amountText = `+ ${tx.amount} NPR`;
-                } else {
+                    iconClass += ' deposit';
+                    iconName = 'arrow-down';
+                } else if (tx.subtype === 'Withdrawal') {
                     amountText = `- ${tx.amount} NPR`;
+                    iconClass += ' withdrawal';
+                    iconName = 'arrow-up';
+                } else if (tx.subtype === 'Connection' || tx.subtype === 'Disconnection') {
+                    amountText = `N/A`;
+                    iconClass += ' connection';
+                    iconName = tx.subtype === 'Connection' ? 'university' : 'unlink';
+                } else {
+                    iconName = 'university';
                 }
             }
             
             // Set row content
             row.innerHTML = `
                 <td>
-                    <div class="tx-icon ${tx.type.toLowerCase()}">
-                        <i class="fas fa-${tx.type === 'Transfer' ? (tx.subtype === 'Sent' ? 'paper-plane' : 'download') : (tx.type === 'Bank' ? 'university' : 'exchange-alt')}"></i>
+                    <div class="tx-icon ${iconClass}">
+                        <i class="fas fa-${iconName}"></i>
                     </div>
                     ${tx.type}
                 </td>
@@ -491,31 +514,58 @@ document.addEventListener('DOMContentLoaded', function() {
         return localStorage.getItem('bankConnected') === 'true';
     }
 
-    // Check bank connection and show appropriate interface
-    function checkBankConnection() {
-        if (isBankConnected()) {
-            // Show bank transfer interface
-            document.getElementById('bank-connect-form').classList.add('hidden');
-            document.getElementById('bank-transfer-interface').classList.remove('hidden');
+    // Check bank connection status and show appropriate interface
+    async function checkBankConnection() {
+        try {
+            const response = await fetch(`http://localhost:8545/api/bank/status/${walletAddress}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
             
-            // Display masked account number
-            const bankAccount = localStorage.getItem('bankAccount');
-            if (bankAccount) {
-                const lastFour = bankAccount.slice(-4);
-                document.getElementById('connected-bank-account').textContent = `****${lastFour}`;
+            const data = await response.json();
+            
+            if (response.ok) {
+                // Store bank connection status in localStorage for quick UI access
+                localStorage.setItem('bankConnected', data.connected ? 'true' : 'false');
+                
+                if (data.connected) {
+                    // Show bank transfer interface
+                    document.getElementById('bank-connect-form').classList.add('hidden');
+                    document.getElementById('bank-transfer-interface').classList.remove('hidden');
+                    
+                    // Display masked account number
+                    if (data.bankInfo && data.bankInfo.accountNumber) {
+                        document.getElementById('connected-bank-account').textContent = data.bankInfo.accountNumber;
+                    }
+                    
+                    // Update withdraw available balance
+                    document.getElementById('withdraw-available-balance').textContent = balances.npr.toFixed(2);
+                } else {
+                    // Show bank connect form
+                    document.getElementById('bank-connect-form').classList.remove('hidden');
+                    document.getElementById('bank-transfer-interface').classList.add('hidden');
+                }
+            } else {
+                // Error handling
+                showNotification('Error checking bank status: ' + data.error);
+                // Default to showing connect form on error
+                document.getElementById('bank-connect-form').classList.remove('hidden');
+                document.getElementById('bank-transfer-interface').classList.add('hidden');
             }
-            
-            // Update withdraw available balance
-            document.getElementById('withdraw-available-balance').textContent = balances.npr.toFixed(2);
-        } else {
-            // Show bank connect form
+        } catch (error) {
+            console.error('Error checking bank status:', error);
+            showNotification('Network error. Please try again.');
+            // Default to showing connect form on error
             document.getElementById('bank-connect-form').classList.remove('hidden');
             document.getElementById('bank-transfer-interface').classList.add('hidden');
         }
     }
 
     // Handle bank connection form submission
-    function handleBankConnectSubmit(e) {
+    async function handleBankConnectSubmit(e) {
         e.preventDefault();
         
         const fullName = document.getElementById('bank-full-name').value;
@@ -541,24 +591,46 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         
-        // Store bank connection info
-        localStorage.setItem('bankConnected', 'true');
-        localStorage.setItem('bankName', fullName);
-        localStorage.setItem('bankPhone', phoneNumber);
-        localStorage.setItem('bankAccount', accountNumber);
-        
-        // Generate a mock transaction hash for the connection
-        const connectionHash = '0x' + Array(40).fill(0).map(() => 
-            Math.floor(Math.random() * 16).toString(16)).join('');
-        
-        // Add bank connection transaction
-        addBankTransaction('Connection', 0, connectionHash);
-        
-        // Show success notification
-        showNotification('Bank account successfully connected!');
-        
-        // Update the interface to show bank transfer options
-        checkBankConnection();
+        try {
+            const response = await fetch('http://localhost:8545/api/bank/connect', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    address: walletAddress,
+                    fullName,
+                    phoneNumber,
+                    accountNumber
+                })
+            });
+            
+            const data = await response.json();
+            
+            if (response.ok) {
+                // Update local state
+                localStorage.setItem('bankConnected', 'true');
+                
+                // Show success notification
+                showNotification('Bank account successfully connected!');
+                
+                // Show transaction hash in modal
+                document.getElementById('tx-hash').textContent = data.txHash;
+                showModal();
+                
+                // Update the interface
+                checkBankConnection();
+                
+                // Refresh transactions to show the new bank connection
+                loadTransactions();
+            } else {
+                showNotification('Connection failed: ' + data.error);
+            }
+        } catch (error) {
+            console.error('Error connecting bank account:', error);
+            showNotification('Network error. Please try again.');
+        }
     }
 
     // Handle bank deposit submission
@@ -574,20 +646,26 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         try {
-            // Simulating API call for bank deposit
-            setTimeout(() => {
+            const response = await fetch('http://localhost:8545/api/bank/deposit', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    address: walletAddress,
+                    amount: amount
+                })
+            });
+            
+            const data = await response.json();
+            
+            if (response.ok) {
                 // Update NPR balance
-                balances.npr += amount;
+                balances.npr = parseFloat(data.balance.npr);
                 
-                // Generate a mock transaction hash
-                const txHash = '0x' + Array(40).fill(0).map(() => 
-                    Math.floor(Math.random() * 16).toString(16)).join('');
-                
-                // Add bank transaction
-                addBankTransaction('Deposit', amount, txHash);
-                
-                // Show success modal
-                document.getElementById('tx-hash').textContent = txHash;
+                // Show transaction hash in modal
+                document.getElementById('tx-hash').textContent = data.txHash;
                 showModal();
                 
                 // Reset form
@@ -600,7 +678,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Update other forms that display NPR balance
                 updateSendForm();
                 updateConvertForm();
-            }, 1500); // Simulate network delay
+                
+                // Refresh transactions
+                loadTransactions();
+            } else {
+                showNotification('Deposit failed: ' + data.error);
+            }
         } catch (error) {
             console.error('Error during bank deposit:', error);
             showNotification('Network error. Please try again.');
@@ -626,20 +709,26 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         try {
-            // Simulating API call for bank withdrawal
-            setTimeout(() => {
+            const response = await fetch('http://localhost:8545/api/bank/withdraw', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    address: walletAddress,
+                    amount: amount
+                })
+            });
+            
+            const data = await response.json();
+            
+            if (response.ok) {
                 // Update NPR balance
-                balances.npr -= amount;
+                balances.npr = parseFloat(data.balance.npr);
                 
-                // Generate a mock transaction hash
-                const txHash = '0x' + Array(40).fill(0).map(() => 
-                    Math.floor(Math.random() * 16).toString(16)).join('');
-                
-                // Add bank transaction
-                addBankTransaction('Withdrawal', amount, txHash);
-                
-                // Show success modal
-                document.getElementById('tx-hash').textContent = txHash;
+                // Show transaction hash in modal
+                document.getElementById('tx-hash').textContent = data.txHash;
                 showModal();
                 
                 // Reset form
@@ -652,52 +741,69 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Update other forms that display NPR balance
                 updateSendForm();
                 updateConvertForm();
-            }, 1500); // Simulate network delay
+                
+                // Refresh transactions
+                loadTransactions();
+            } else {
+                showNotification('Withdrawal failed: ' + data.error);
+            }
         } catch (error) {
             console.error('Error during bank withdrawal:', error);
             showNotification('Network error. Please try again.');
         }
     }
 
-    // Add a bank transaction to the transaction history
-    function addBankTransaction(subtype, amount, txHash) {
-        // Get current transactions
-        const tbody = document.getElementById('transaction-body');
-        
-        // Create new transaction row
-        const row = document.createElement('tr');
-        
-        // Format date
-        const date = new Date();
-        const formattedDate = `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
-        
-        // Set transaction details
-        row.innerHTML = `
-            <td>
-                <div class="tx-icon bank">
-                    <i class="fas fa-university"></i>
-                </div>
-                Bank
-            </td>
-            <td>${subtype}</td>
-            <td class="${subtype === 'Withdrawal' ? 'negative' : (subtype === 'Deposit' ? 'positive' : '')}">
-                ${subtype === 'Connection' ? 'N/A' : (subtype === 'Withdrawal' ? '- ' : '+ ') + amount + ' NPR'}
-            </td>
-            <td>${formattedDate}</td>
-            <td>
-                <span class="status completed">Completed</span>
-            </td>
-        `;
-        
-        // Insert at the beginning of the table
-        if (tbody.firstChild) {
-            tbody.insertBefore(row, tbody.firstChild);
-        } else {
-            tbody.appendChild(row);
+    // Disconnect bank
+    async function disconnectBank() {
+        try {
+            const response = await fetch('http://localhost:8545/api/bank/disconnect', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    address: walletAddress
+                })
+            });
+            
+            const data = await response.json();
+            
+            if (response.ok) {
+                // Update local state
+                localStorage.setItem('bankConnected', 'false');
+                
+                // Show notification
+                showNotification('Bank account disconnected');
+                
+                // Show transaction hash in modal if available
+                if (data.txHash) {
+                    document.getElementById('tx-hash').textContent = data.txHash;
+                    showModal();
+                }
+                
+                // Update UI
+                checkBankConnection();
+                
+                // Refresh transactions
+                loadTransactions();
+            } else {
+                showNotification('Disconnection failed: ' + data.error);
+            }
+        } catch (error) {
+            console.error('Error disconnecting bank account:', error);
+            showNotification('Network error. Please try again.');
         }
-        
-        // Hide "no transactions" message if it's showing
-        document.getElementById('no-transactions').style.display = 'none';
+    }
+
+    // Show success modal
+    function showModal() {
+        document.getElementById('success-modal').style.display = 'flex';
+    }
+
+    // Close modal
+    function closeModal() {
+        document.getElementById('success-modal').style.display = 'none';
     }
 
     // Switch between deposit and withdraw tabs
@@ -709,30 +815,5 @@ document.addEventListener('DOMContentLoaded', function() {
         // Show/hide appropriate form
         document.getElementById('deposit-form-container').classList.toggle('active', tab === 'deposit');
         document.getElementById('withdraw-form-container').classList.toggle('active', tab === 'withdraw');
-    }
-
-    // Disconnect bank
-    function disconnectBank() {
-        // Remove bank connection from local storage
-        localStorage.removeItem('bankConnected');
-        localStorage.removeItem('bankName');
-        localStorage.removeItem('bankPhone');
-        localStorage.removeItem('bankAccount');
-        
-        // Show notification
-        showNotification('Bank account disconnected');
-        
-        // Update UI
-        checkBankConnection();
-    }
-
-    // Show success modal
-    function showModal() {
-        document.getElementById('success-modal').style.display = 'flex';
-    }
-
-    // Close modal
-    function closeModal() {
-        document.getElementById('success-modal').style.display = 'none';
     }
 });

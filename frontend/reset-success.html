@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NPRT Wallet - Password Reset Successful</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-info">
+            <h2>Password Reset Successful</h2>
+            <p>You've successfully reset your password for your NPRT Wallet account.</p>
+            
+            <div class="features">
+                <div class="feature">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div class="feature-text">
+                        <h3>Account Secured</h3>
+                        <p>Your account has been secured with your new password</p>
+                    </div>
+                </div>
+                
+                <div class="feature">
+                    <div class="feature-icon">
+                        <i class="fas fa-wallet"></i>
+                    </div>
+                    <div class="feature-text">
+                        <h3>Assets Protected</h3>
+                        <p>Your wallet and digital assets remain safe and secure</p>
+                    </div>
+                </div>
+                
+                <div class="feature">
+                    <div class="feature-icon">
+                        <i class="fas fa-user-lock"></i>
+                    </div>
+                    <div class="feature-text">
+                        <h3>Privacy Maintained</h3>
+                        <p>Your personal information remains protected</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="auth-form-container">
+            <div class="form-header">
+                <div class="logo">
+                    <i class="fas fa-wallet"></i>
+                    <h1>NPRT Wallet</h1>
+                </div>
+                <p>The Blockchain-based Digital Wallet</p>
+            </div>
+            
+            <div class="auth-form">
+                <div class="success-container">
+                    <div class="success-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h2>Password Reset Successful!</h2>
+                    <p>Your password has been reset successfully.</p>
+                    <p>You can now log in to your account using your new password.</p>
+                    
+                    <button id="login-button" class="btn btn-primary btn-block" style="margin-top: 20px;">
+                        Go to Login
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set up login button
+            document.getElementById('login-button').addEventListener('click', function() {
+                window.location.href = 'login.html';
+            });
+        });
+    </script>
+</body>
+</html> 

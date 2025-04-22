@@ -1,19 +1,13 @@
 async function main() {
-  // Get the contract factories
+  // Get the contract factory
   const NPRToken = await ethers.getContractFactory("NPRToken");
-  const USDToken = await ethers.getContractFactory("USDToken");
 
   // Deploy NPRToken contract
   console.log("Deploying NPRToken...");
   const nprToken = await NPRToken.deploy();
   await nprToken.waitForDeployment();
-  console.log("NPRToken deployed to:", await nprToken.getAddress());
-
-  // Deploy USDToken contract
-  console.log("Deploying USDToken...");
-  const usdToken = await USDToken.deploy();
-  await usdToken.waitForDeployment();
-  console.log("USDToken deployed to:", await usdToken.getAddress());
+  const nprAddress = await nprToken.getAddress();
+  console.log("NPRToken deployed to:", nprAddress);
 }
 
 // Execute deployment
