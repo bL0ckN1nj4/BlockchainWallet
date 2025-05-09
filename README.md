@@ -20,9 +20,9 @@ NPRWallet is a full-stack blockchain-based digital wallet that enables users to 
 ## 🛠️ Technology Stack
 
 - **Frontend**: HTML5, CSS3, JavaScript, Bootstrap
-- **Backend API**: Node.js, Express, JWT, Axios
+- **Backend API**: Node.js, Express, JWT
 - **Blockchain**: Ethereum (local Hardhat node), Ethers.js, Web3.js
-- **Smart Contracts**: Solidity (ERC20 standard for NPRToken and USDToken)
+- **Smart Contracts**: Solidity (ERC20 standard for NPRToken)
 - **Storage/Integration**: Pinata (IPFS) for decentralized email-to-wallet mapping
 
 ---
@@ -51,53 +51,38 @@ NPRWallet/
 ### 1. Prerequisites
 - **Node.js** (v18+ recommended): https://nodejs.org/
 - **npm** (comes with Node.js)
-- **Pinata account** (for IPFS integration): https://pinata.cloud/
 
 ### 2. Clone the Repository
-```shell
 git clone <your-repo-url>
 cd "NPRWallet"
 ```
 
 ### 3. Install Dependencies (Root & Backend)
-```shell
 npm install           # Install root dependencies (Hardhat, etc.)
 cd nodejs_api
 npm install           # Install backend API dependencies
 cd ..
 ```
 
-### 4. Configure Environment Variables
-Create a `.env` file in the root directory with your Pinata API keys:
-```
-PINATA_API_KEY=your_pinata_api_key
-PINATA_API_SECRET=your_pinata_api_secret
-```
-
 ### 5. Start Local Blockchain (Hardhat)
-```shell
 npx hardhat node
 ```
 
 ### 6. Deploy Smart Contracts
 Open a new terminal:
-```shell
 npx hardhat run scripts/deploy.js --network localhost
 ```
 
 ### 7. Start Backend API Server
-```shell
 cd nodejs_api
-node index.js
+node server.js
 ```
 
 ### 8. Serve the Frontend
 You can use any static file server (e.g., http-server):
-```shell
 npx http-server frontend -p 3000 --cors
 ```
 Or use the provided batch script (Windows only):
-```shell
 start-services.bat
 ```
 
@@ -111,9 +96,8 @@ http://localhost:3000
 
 ## ⚙️ Smart Contracts
 - `NPRToken.sol`: ERC20 token contract for NPRT
-- `USDToken.sol`: ERC20 token contract for USD (if used)
 - Other supporting contracts: `ERC20.sol`, `Ownable.sol`, `SafeMath.sol`, etc.
-- **Deployment**: Both NPRToken and USDToken are deployed locally via Hardhat scripts
+- **Deployment**: Both NPRToken is deployed locally via Hardhat scripts
 - **Exchange Rate**: Fixed at 1 NPRT = 100 NPR
 
 ---
@@ -133,7 +117,6 @@ For issues or contributions, please open an issue or pull request on the reposit
 
 ## 📚 References
 - [Hardhat Documentation](https://hardhat.org/)
-- [Pinata IPFS](https://pinata.cloud/)
 - [Solidity Docs](https://docs.soliditylang.org/)
 - [Express.js](https://expressjs.com/)
 - [Bootstrap](https://getbootstrap.com/)
